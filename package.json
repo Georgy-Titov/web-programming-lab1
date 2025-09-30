@@ -1,0 +1,24 @@
+{
+  "name": "web-lab1",
+  "version": "1.0.0",
+  "description": "Unit tests для лабораторной работы по дисциплине WEB-программирование.",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "jest": {
+  "testMatch": ["**/cart.tests.js"],
+  "collectCoverage": true,
+  "collectCoverageFrom": ["script.js"],
+  "testEnvironment": "jsdom"
+  },
+  "keywords": [],
+  "author": "Titov Georgy",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2"
+  }
+}

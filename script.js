@@ -94,15 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     // Товары 
     const products = [
-      { id: 1, title: "LABUBU | WINGS OF FANTASY", price: 349, image: "images/Labubu_WINGS_OF_FANTASY.jpg" },
-      { id: 2, title: "LABUBU | FALL INTO WILD", price: 349, image: "images/Labubu_FALL_INTO-WILD.jpg" },
+      { id: 1, title: "LABUBU | WINGS OF FANTASY", price: 399, image: "images/Labubu_WINGS_OF_FANTASY.jpg" },
+      { id: 2, title: "LABUBU | FALL INTO WILD", price: 359, image: "images/Labubu_FALL_INTO-WILD.jpg" },
       { id: 3, title: "LABUBU | KING", price: 549, image: "images/Labubu_KING.jpg" },
       { id: 4, title: "LABUBU | FLIP WITH ME", price: 349, image: "images/Labubu_FLIP_WITH_ME.jpg" },
       { id: 5, title: "LABUBU | ANGEL IN CLOUD", price: 649, image: "images/Labubu_ANGEL_IN_CLOUD.jpg" },
       { id: 6, title: "LABUBU | ROCK", price: 349, image: "images/Labubu_ROCK.jpg" },
-      { id: 7, title: "MINI LABUBU | WOF", price: 349, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
-      { id: 8, title: "MINI LABUBU | FIW", price: 349, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
-      { id: 8, title: "MINI LABUBU | COLA", price: 349, image: "images/Labubu_COLA.jpg" }
+      { id: 7, title: "MINI LABUBU | WOF", price: 59, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
+      { id: 8, title: "MINI LABUBU | FIW", price: 59, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
+      { id: 8, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
     ];
 
     const productsContainer = document.getElementById('products');
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <article>
             <img src="${product.image}" alt="${product.title}">
             <h3>${product.title}</h3>
-            <p class="price">${product.price} руб.</p>
+            <p class="price">${product.price} €.</p>
             <button class="add-btn" data-id="${product.id}" data-title="${product.title}" data-price="${product.price}">
               Добавить в корзину
             </button>
