@@ -8,8 +8,9 @@ if (savedCart) {
   cart = JSON.parse(savedCart);
 }
 
+// --- функции работы с корзиной ---
 function addToCart(cartObj, product) {
-  const id = product.id;
+  const id = String(product.id);
   if (cartObj[id]) {
     cartObj[id].qty++;
   } else {
@@ -48,17 +49,16 @@ function validateAddress(address) {
   return address.trim().length >= 5;
 }
 
-// /* istanbul ignore next */
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-// /* istanbul ignore next */
+
 function updateCartCount() {
   const count = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
   const cartCountElem = document.getElementById("cartCount");
   if (cartCountElem) cartCountElem.textContent = count;
 }
-// * istanbul ignore next */
+
 function showCart() {
   const cartItems = document.getElementById("cartItems");
   if (!cartItems) return;
@@ -89,7 +89,40 @@ function showCart() {
   if (totalElem) totalElem.textContent = total;
 }
 
-// /* istanbul ignore next */
+// --- новые функции для кнопок ---
+function setProductButtonState(id) {
+  const idStr = String(id);
+  const btn = document.querySelector(`.add-btn[data-id="${idStr}"]`);
+  if (!btn) return;
+
+  if (cart[idStr]) {
+    btn.classList.add('in-cart');
+    btn.textContent = 'Уже в корзине';
+    btn.onclick = () => document.getElementById('cartBtn')?.click();
+  } else {
+    btn.classList.remove('in-cart');
+    btn.textContent = 'Добавить в корзину';
+    btn.onclick = null;
+  }
+}
+
+function refreshAllProductButtons() {
+  const buttons = document.querySelectorAll('.add-btn');
+  buttons.forEach(btn => {
+    const id = btn.dataset.id;
+    if (cart[id]) {
+      btn.classList.add('in-cart');
+      btn.textContent = 'Уже в корзине';
+      btn.onclick = () => document.getElementById('cartBtn')?.click();
+    } else {
+      btn.classList.remove('in-cart');
+      btn.textContent = 'Добавить в корзину';
+      btn.onclick = null;
+    }
+  });
+}
+
+// --- основной код ---
 document.addEventListener('DOMContentLoaded', () => {
   try {
     // Товары 
@@ -124,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productsContainer.appendChild(li);
       });
 
+      // обработчик нажатий по кнопкам
       productsContainer.addEventListener("click", e => {
         if (e.target.classList.contains("add-btn")) {
           const id = parseInt(e.target.dataset.id);
@@ -132,23 +166,32 @@ document.addEventListener('DOMContentLoaded', () => {
           addToCart(cart, { id, title, price });
           saveCart();
           updateCartCount();
+          setProductButtonState(id); // обновляем состояние кнопки
         }
       });
+
+      // после рендера обновляем кнопки
+      refreshAllProductButtons();
     }
 
     // Корзина 
     const cartModal = document.getElementById("cartModal");
     const cartItems = document.getElementById("cartItems");
 
-    document.getElementById("cartBtn")?.addEventListener("click", () => { showCart(); cartModal?.classList.remove("hidden"); });
+    document.getElementById("cartBtn")?.addEventListener("click", () => { 
+      showCart(); 
+      cartModal?.classList.remove("hidden"); 
+    });
     document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
 
     cartItems?.addEventListener("click", e => {
       if (e.target.classList.contains("remove-btn")) {
-        removeFromCart(cart, e.target.dataset.id);
+        const id = e.target.dataset.id;
+        removeFromCart(cart, id);
         saveCart();
         showCart();
         updateCartCount();
+        setProductButtonState(id); // обновляем состояние кнопки
       }
     });
 
@@ -190,12 +233,14 @@ document.addEventListener('DOMContentLoaded', () => {
       cart = {};
       saveCart();
       updateCartCount();
+      refreshAllProductButtons(); // все кнопки сбросились в исходное состояние
       checkoutModal?.classList.add("hidden");
       cartModal?.classList.add("hidden");
     });
 
-    // После загрузки обновляем счётчик корзины
+    // После загрузки обновляем счётчик корзины и кнопки
     updateCartCount();
+    refreshAllProductButtons();
 
   } catch (err) {
     console.error('Ошибка в основном блоке script.js:', err);
@@ -216,6 +261,8 @@ if (typeof module !== "undefined") {
     validateAddress,
     saveCart,
     updateCartCount,
-    showCart
+    showCart,
+    setProductButtonState,
+    refreshAllProductButtons
   };
 }
