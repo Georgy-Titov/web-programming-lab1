@@ -98,12 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 2, title: "LABUBU | FALL INTO WILD", price: 359, image: "images/Labubu_FALL_INTO-WILD.jpg" },
       { id: 3, title: "LABUBU | KING", price: 549, image: "images/Labubu_KING.jpg" },
       { id: 4, title: "LABUBU | FLIP WITH ME", price: 349, image: "images/Labubu_FLIP_WITH_ME.jpg" },
-      { id: 5, title: "LABUBU | ANGEL IN CLOUD", price: 649, image: "images/Labubu_ANGEL_IN_CLOUD.jpg" },
-      { id: 6, title: "LABUBU | ROCK", price: 349, image: "images/Labubu_ROCK.jpg" },
-      { id: 7, title: "MINI LABUBU | WOF", price: 59, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
-      { id: 8, title: "MINI LABUBU | FIW", price: 59, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
-      { id: 9, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" },
-      { id: 10, title: "MINI LABUBU | FWM", price: 79, image: "images/Mini_labubu_FWM.jpg" }
+      { id: 5, title: "LABUBU | FWM GLASSES", price: 379, image: "images/Mini_labubu_FWM.jpg" },
+      { id: 6, title: "LABUBU | ANGEL IN CLOUD", price: 649, image: "images/Labubu_ANGEL_IN_CLOUD.jpg" },
+      { id: 7, title: "LABUBU | ROCK", price: 549, image: "images/Labubu_ROCK.jpg" },
+      { id: 8, title: "MINI LABUBU | WOF", price: 59, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
+      { id: 9, title: "MINI LABUBU | FIW", price: 59, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
+      { id: 10, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
     ];
 
     const productsContainer = document.getElementById('products');
