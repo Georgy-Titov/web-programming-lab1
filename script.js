@@ -102,7 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 6, title: "LABUBU | ROCK", price: 349, image: "images/Labubu_ROCK.jpg" },
       { id: 7, title: "MINI LABUBU | WOF", price: 59, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
       { id: 8, title: "MINI LABUBU | FIW", price: 59, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
-      { id: 8, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
+      { id: 9, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" },
+      { id: 10, title: "MINI LABUBU | FWM", price: 79, image: "images/Mini_labubu_FWM.jpg" }
     ];
 
     const productsContainer = document.getElementById('products');
