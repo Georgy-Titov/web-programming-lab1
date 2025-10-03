@@ -123,4 +123,77 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartItems = document.getElementById("cartItems");
 
   productsContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("
+    if (e.target.classList.contains("add-btn")) {
+      const id = parseInt(e.target.dataset.id);
+      if (cart[id]) {
+        saveCart();
+        showCart();
+        cartModal?.classList.remove("hidden");
+      } else {
+        const title = e.target.dataset.title;
+        const price = parseInt(e.target.dataset.price);
+        addToCart(cart, { id, title, price });
+        saveCart();
+        updateCartCount();
+        updateAddButtons();
+        showNotification("✅ Товар добавлен в корзину!");
+      }
+    }
+  });
+
+  document.getElementById("cartBtn")?.addEventListener("click", () => { showCart(); cartModal?.classList.remove("hidden"); });
+  document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
+  document.getElementById("checkoutBtn")?.addEventListener("click", () => { checkoutModal?.classList.remove("hidden"); cartModal?.classList.add("hidden"); });
+  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
+
+  cartItems?.addEventListener("click", e => {
+    const id = e.target.dataset.id;
+    if (e.target.classList.contains("remove-btn")) {
+      removeFromCart(cart, id);
+      saveCart();
+      showCart();
+      updateCartCount();
+    } else if (e.target.classList.contains("qty-btn")) {
+      if (e.target.dataset.action === "increase") updateQty(cart, id, cart[id].qty + 1);
+      if (e.target.dataset.action === "decrease") updateQty(cart, id, cart[id].qty - 1);
+      saveCart();
+      showCart();
+      updateCartCount();
+    }
+  });
+
+  cartItems?.addEventListener("change", e => {
+    if (e.target.classList.contains("qty-input")) {
+      const id = e.target.dataset.id;
+      let value = parseInt(e.target.value);
+      updateQty(cart, id, value);
+      saveCart();
+      showCart();
+      updateCartCount();
+    }
+  });
+
+  document.getElementById("orderForm")?.addEventListener("submit", e => {
+    e.preventDefault();
+    if (Object.values(cart).reduce((sum, item) => sum + item.qty, 0) === 0) {
+      showNotification("⚠ Корзина пуста!");
+      return;
+    }
+    cart = {};
+    saveCart();
+    updateCartCount();
+    checkoutModal?.classList.add("hidden");
+    updateAddButtons();
+    showNotification("✅ Заказ успешно создан!");
+  });
+
+  updateCartCount();
+  updateAddButtons();
+});
+
+/* Плавное уменьшение шапки */
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('header');
+  if(window.scrollY > 50) header.classList.add('shrink');
+  else header.classList.remove('shrink');
+});
