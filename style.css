@@ -121,11 +121,12 @@ main h2 {
   padding: 0.5rem;
   cursor: pointer;
   border-radius: 5px;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .add-btn:hover {
   background: #45a049;
+  transform: scale(1.05);
 }
 
 .add-btn.in-cart {
@@ -133,7 +134,7 @@ main h2 {
 }
 
 .add-btn.in-cart:hover {
-  background: #d32f2f;
+  transform: scale(1.05);
 }
 
 .modal.hidden {
