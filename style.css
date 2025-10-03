@@ -293,15 +293,23 @@ main h2 {
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   color: #e53935;
-  transition: transform 0.2s ease;
+  background: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .close:hover {
   transform: rotate(90deg);
+  background: #f8d7da;
 }
 
 @keyframes fadeIn {
