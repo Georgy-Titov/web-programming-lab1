@@ -10,6 +10,12 @@ function addToCart(cartObj, product) {
   }
 }
 
+function updateQty(cartObj, id, qty) {
+  if (!cartObj[id]) return;
+  qty = Math.max(1, Math.min(qty, 10000));
+  cartObj[id].qty = qty;
+}
+
 function removeFromCart(cartObj, id) {
   delete cartObj[id];
 }
@@ -20,8 +26,7 @@ function saveCart() {
 
 function updateCartCount() {
   const count = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
-  const cartCountElem = document.getElementById("cartCount");
-  if (cartCountElem) cartCountElem.textContent = count;
+  document.getElementById("cartCount").textContent = count;
 }
 
 function showCart() {
@@ -49,9 +54,7 @@ function showCart() {
     cartItems.appendChild(li);
   }
 
-  const totalElem = document.getElementById("cartTotal");
-  if (totalElem) totalElem.textContent = total;
-
+  document.getElementById("cartTotal").textContent = total;
   updateAddButtons();
 }
 
@@ -73,7 +76,7 @@ function updateAddButtons() {
     const id = parseInt(btn.dataset.id);
     if (cart[id]) {
       btn.classList.add("in-cart");
-      btn.textContent = "Уже в корзине";
+      btn.textContent = "В корзине";
     } else {
       btn.classList.remove("in-cart");
       btn.textContent = "Добавить в корзину";
@@ -81,7 +84,7 @@ function updateAddButtons() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const products = [
     { id: 1, title: "LABUBU | WINGS OF FANTASY", price: 399, image: "images/Labubu_WINGS_OF_FANTASY.jpg" },
     { id: 2, title: "LABUBU | FALL INTO WILD", price: 359, image: "images/Labubu_FALL_INTO-WILD.jpg" },
@@ -95,10 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 10, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
   ];
 
-  const productsContainer = document.getElementById('products');
-  productsContainer.innerHTML = '';
+  const productsContainer = document.getElementById("products");
+  productsContainer.innerHTML = "";
+
   products.forEach(product => {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.innerHTML = `
       <article>
         <img src="${product.image}" alt="${product.title}">
@@ -113,31 +117,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   productsContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("add-btn")) {
-      const id = parseInt(e.target.dataset.id);
-      const title = e.target.dataset.title;
-      const price = parseInt(e.target.dataset.price);
+    if (!e.target.classList.contains("add-btn")) return;
 
-      if (!cart[id]) {
-        addToCart(cart, { id, title, price });
-        saveCart();
-        updateCartCount();
-        updateAddButtons();
-      } else {
-        document.getElementById("cartModal")?.classList.remove("hidden");
-        showCart();
-      }
+    const id = parseInt(e.target.dataset.id);
+    const title = e.target.dataset.title;
+    const price = parseInt(e.target.dataset.price);
+
+    if (!cart[id]) {
+      addToCart(cart, { id, title, price });
+      saveCart();
+      updateCartCount();
+      updateAddButtons();
+    } else {
+      document.getElementById("cartModal")?.classList.remove("hidden");
+      showCart();
     }
   });
 
   const cartModal = document.getElementById("cartModal");
   const cartItems = document.getElementById("cartItems");
+  const checkoutModal = document.getElementById("checkoutModal");
 
   document.getElementById("cartBtn")?.addEventListener("click", () => {
     showCart();
     cartModal?.classList.remove("hidden");
   });
+
   document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
+  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
 
   cartItems?.addEventListener("click", e => {
     if (e.target.classList.contains("remove-btn")) {
@@ -152,16 +159,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.classList.contains("qty-input")) {
       const id = e.target.dataset.id;
       let value = parseInt(e.target.value);
-      cart[id].qty = value;
+      updateQty(cart, id, value);
+      e.target.value = cart[id].qty;
       saveCart();
       showCart();
       updateCartCount();
     }
   });
 
-  const checkoutModal = document.getElementById("checkoutModal");
-  document.getElementById("checkoutBtn")?.addEventListener("click", () => checkoutModal?.classList.remove("hidden"));
-  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
+  document.getElementById("checkoutBtn")?.addEventListener("click", () => {
+    checkoutModal?.classList.remove("hidden");
+  });
 
   document.getElementById("orderForm")?.addEventListener("submit", e => {
     e.preventDefault();
@@ -177,15 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cartModal?.classList.add("hidden");
     updateAddButtons();
     showNotification("✅ Заказ успешно создан!");
-  });
-
-  const header = document.querySelector("header");
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      header.style.height = "60px";
-    } else {
-      header.style.height = "80px";
-    }
   });
 
   updateCartCount();
