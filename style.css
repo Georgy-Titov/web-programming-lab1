@@ -22,6 +22,10 @@ header {
   z-index: 100;
 }
 
+header.shrink {
+  height: 60px;
+}
+
 header h1 {
   color: red;
   position: absolute;
@@ -203,10 +207,20 @@ main h2 {
   margin: 5px 0;
 }
 
+.qty-input {
+  width: 50px;
+  text-align: center;
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
 .qty-controls {
   display: flex;
   gap: 5px;
   align-items: center;
+  justify-content: center;
 }
 
 .qty-controls button {
@@ -217,17 +231,12 @@ main h2 {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .qty-controls button:hover {
   background: #45a049;
-}
-
-.qty-controls span {
-  min-width: 30px;
-  text-align: center;
-  display: inline-block;
+  transform: scale(1.05);
 }
 
 .remove-btn {
@@ -282,11 +291,12 @@ main h2 {
   border-radius: 6px;
   font-size: 1rem;
   font-weight: bold;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
   background: #45a049;
+  transform: scale(1.05);
 }
 
 .close {
