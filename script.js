@@ -12,7 +12,8 @@ function addToCart(cartObj, product) {
 
 function updateQty(cartObj, id, qty) {
   if (!cartObj[id]) return;
-  qty = Math.max(1, Math.min(qty, 10000));
+  if (qty < 1) qty = 1;
+  if (qty > 10000) qty = 10000;
   cartObj[id].qty = qty;
 }
 
@@ -26,7 +27,22 @@ function saveCart() {
 
 function updateCartCount() {
   const count = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
-  document.getElementById("cartCount").textContent = count;
+  const cartCountElem = document.getElementById("cartCount");
+  if (cartCountElem) cartCountElem.textContent = count;
+}
+
+function showNotification(message) {
+  let notif = document.createElement("div");
+  notif.className = "notification";
+  notif.textContent = message;
+  document.body.appendChild(notif);
+
+  setTimeout(() => notif.classList.add("show"), 50);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 400);
+  }, 3000);
 }
 
 function showCart() {
@@ -45,8 +61,11 @@ function showCart() {
       <div class="cart-item-info">
         <span>${item.title}</span>
         <span>${item.price} €</span>
-        <span>&times;</span>
-        <input type="number" min="1" max="10000" value="${item.qty}" data-id="${id}" class="qty-input">
+        <div class="qty-controls" data-id="${id}">
+          <button class="decrease">-</button>
+          <span class="qty">${item.qty}</span>
+          <button class="increase">+</button>
+        </div>
       </div>
       <div class="cart-item-sum">Итого: ${item.price * item.qty} €</div>
       <button class="remove-btn" data-id="${id}">Удалить</button>
@@ -54,21 +73,10 @@ function showCart() {
     cartItems.appendChild(li);
   }
 
-  document.getElementById("cartTotal").textContent = total;
+  const totalElem = document.getElementById("cartTotal");
+  if (totalElem) totalElem.textContent = total;
+
   updateAddButtons();
-}
-
-function showNotification(message) {
-  const notif = document.createElement("div");
-  notif.className = "notification";
-  notif.textContent = message;
-  document.body.appendChild(notif);
-
-  setTimeout(() => notif.classList.add("show"), 50);
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 400);
-  }, 3000);
 }
 
 function updateAddButtons() {
@@ -100,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const productsContainer = document.getElementById("products");
   productsContainer.innerHTML = "";
-
   products.forEach(product => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -117,59 +124,53 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   productsContainer.addEventListener("click", e => {
-    if (!e.target.classList.contains("add-btn")) return;
-
-    const id = parseInt(e.target.dataset.id);
-    const title = e.target.dataset.title;
-    const price = parseInt(e.target.dataset.price);
-
-    if (!cart[id]) {
-      addToCart(cart, { id, title, price });
-      saveCart();
-      updateCartCount();
-      updateAddButtons();
-    } else {
-      document.getElementById("cartModal")?.classList.remove("hidden");
-      showCart();
+    if (e.target.classList.contains("add-btn")) {
+      const id = parseInt(e.target.dataset.id);
+      if (cart[id]) {
+        document.getElementById("cartModal")?.classList.remove("hidden");
+      } else {
+        const title = e.target.dataset.title;
+        const price = parseInt(e.target.dataset.price);
+        addToCart(cart, { id, title, price });
+        saveCart();
+        updateCartCount();
+        updateAddButtons();
+        showNotification("✅ Товар добавлен в корзину!");
+      }
     }
   });
 
   const cartModal = document.getElementById("cartModal");
   const cartItems = document.getElementById("cartItems");
-  const checkoutModal = document.getElementById("checkoutModal");
 
   document.getElementById("cartBtn")?.addEventListener("click", () => {
     showCart();
     cartModal?.classList.remove("hidden");
   });
-
   document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
-  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
 
   cartItems?.addEventListener("click", e => {
+    const id = e.target.closest(".qty-controls")?.dataset.id || e.target.dataset.id;
+    if (!id) return;
+
+    if (e.target.classList.contains("increase")) {
+      updateQty(cart, id, cart[id].qty + 1);
+    }
+    if (e.target.classList.contains("decrease")) {
+      updateQty(cart, id, cart[id].qty - 1);
+    }
     if (e.target.classList.contains("remove-btn")) {
-      removeFromCart(cart, e.target.dataset.id);
-      saveCart();
-      showCart();
-      updateCartCount();
+      removeFromCart(cart, id);
     }
+
+    saveCart();
+    showCart();
+    updateCartCount();
   });
 
-  cartItems?.addEventListener("change", e => {
-    if (e.target.classList.contains("qty-input")) {
-      const id = e.target.dataset.id;
-      let value = parseInt(e.target.value);
-      updateQty(cart, id, value);
-      e.target.value = cart[id].qty;
-      saveCart();
-      showCart();
-      updateCartCount();
-    }
-  });
-
-  document.getElementById("checkoutBtn")?.addEventListener("click", () => {
-    checkoutModal?.classList.remove("hidden");
-  });
+  const checkoutModal = document.getElementById("checkoutModal");
+  document.getElementById("checkoutBtn")?.addEventListener("click", () => checkoutModal?.classList.remove("hidden"));
+  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
 
   document.getElementById("orderForm")?.addEventListener("submit", e => {
     e.preventDefault();
