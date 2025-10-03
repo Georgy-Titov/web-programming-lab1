@@ -13,17 +13,8 @@ header {
   align-items: center;
   padding: 0 16px;
   height: 80px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  position: relative;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: height 0.3s ease;
-}
-
-header.shrink {
-  height: 60px;
 }
 
 header h1 {
@@ -34,38 +25,18 @@ header h1 {
   margin: 0;
   font-size: 2.5rem;
   font-weight: bold;
-  transition: font-size 0.3s ease;
-}
-
-header.shrink h1 {
-  font-size: 1.8rem;
 }
 
 header button {
-  background: transparent;
+  background: #f5f5f5;
   border: none;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 5px;
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 1rem;
-}
-
-header button img {
-  width: 24px;
-  height: 24px;
-  transition: width 0.3s ease, height 0.3s ease;
-}
-
-header.shrink button img {
-  width: 20px;
-  height: 20px;
-}
-
-main {
-  padding-top: 100px;
+  gap: 5px;
 }
 
 main h2 {
@@ -118,6 +89,7 @@ main h2 {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  align-items: center;
 }
 
 .products .price {
@@ -131,50 +103,16 @@ main h2 {
   margin: 5px 0;
 }
 
-.modal.hidden {
-  display: none;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 500px;
-  max-width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.close {
-  cursor: pointer;
-  font-size: 20px;
-  float: right;
-}
-
 .add-btn {
+  width: 70%;
   margin-top: 0.5rem;
   background: #4CAF50;
   color: white;
   border: none;
-  padding: 0.5rem 1.2rem;
+  padding: 0.5rem;
   cursor: pointer;
   border-radius: 5px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  transition: background 0.3s ease;
 }
 
 .add-btn:hover {
@@ -185,54 +123,41 @@ main h2 {
   background: #e53935;
 }
 
-.add-btn.in-cart:hover {
-  background: #c62828;
+.modal.hidden {
+  display: none;
 }
 
-.order-form label {
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
   display: flex;
-  flex-direction: column;
-  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.order-form input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
+.modal-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
 }
 
-.btn-primary {
-  margin-top: 10px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: #45a049;
-}
-
-.btn-danger {
-  background: #5b5a5a;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.btn-danger:hover {
-  background: #c62828;
+.modal-content h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .cart-item {
@@ -284,6 +209,10 @@ main h2 {
   transition: background 0.3s ease;
 }
 
+.remove-btn:hover {
+  background: #d32f2f;
+}
+
 .card-bottom {
   display: flex;
   flex-direction: column;
@@ -294,6 +223,54 @@ main h2 {
   gap: 5px;
 }
 
-.remove-btn:hover {
-  background: #d32f2f;
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-form label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.order-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.order-form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+@keyframes fadeIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 2000;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
 }
