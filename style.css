@@ -13,16 +13,8 @@ header {
   align-items: center;
   padding: 0 16px;
   height: 80px;
-  position: fixed;
-  top: 0;
-  width: 100%;
+  position: relative;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: height 0.3s ease;
-  z-index: 100;
-}
-
-header.shrink {
-  height: 50px;
 }
 
 header h1 {
@@ -33,11 +25,6 @@ header h1 {
   margin: 0;
   font-size: 2.5rem;
   font-weight: bold;
-  transition: font-size 0.3s ease;
-}
-
-header.shrink h1 {
-  font-size: 1.8rem;
 }
 
 header button {
@@ -47,10 +34,9 @@ header button {
   cursor: pointer;
   border-radius: 5px;
   font-weight: bold;
-}
-
-main {
-  padding-top: 100px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 main h2 {
@@ -103,6 +89,7 @@ main h2 {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  align-items: center;
 }
 
 .products .price {
@@ -117,14 +104,14 @@ main h2 {
 }
 
 .add-btn {
+  width: 70%;
+  margin-top: 0.5rem;
   background: #4CAF50;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   cursor: pointer;
   border-radius: 5px;
-  width: 80%;
-  align-self: center;
   transition: background 0.3s ease;
 }
 
@@ -134,7 +121,10 @@ main h2 {
 
 .add-btn.in-cart {
   background: #e53935;
-  color: white;
+}
+
+.modal.hidden {
+  display: none;
 }
 
 .modal {
@@ -150,58 +140,24 @@ main h2 {
   z-index: 1000;
 }
 
-.modal.hidden {
-  display: none;
-}
-
 .modal-content {
-  background: #fff;
-  padding: 25px;
+  background: white;
+  padding: 25px 30px;
   border-radius: 12px;
   width: 500px;
   max-width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
 }
 
-.close {
-  cursor: pointer;
-  font-size: 20px;
-  float: right;
-}
-
-.btn-primary {
-  margin-top: 10px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: #45a049;
-}
-
-.btn-danger {
-  background: #5b5a5a;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.btn-danger:hover {
-  background: #c62828;
+.modal-content h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .cart-item {
@@ -257,7 +213,47 @@ main h2 {
   background: #d32f2f;
 }
 
-.toast {
+.card-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+  flex: 1;
+  gap: 5px;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-form label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.order-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.order-form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+@keyframes fadeIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.notification {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -265,7 +261,16 @@ main h2 {
   color: white;
   padding: 12px 20px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: all 0.4s ease;
   z-index: 2000;
-  display: none;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
 }
