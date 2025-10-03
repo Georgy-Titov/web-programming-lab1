@@ -61,7 +61,7 @@ function showCart() {
   const totalElem = document.getElementById("cartTotal");
   if (totalElem) totalElem.textContent = total;
 
-  updateAddButtons(); // обновляем состояние кнопок
+  updateAddButtons();
 }
 
 function showNotification(message) {
@@ -71,7 +71,6 @@ function showNotification(message) {
   document.body.appendChild(notif);
 
   setTimeout(() => notif.classList.add("show"), 50);
-
   setTimeout(() => {
     notif.classList.remove("show");
     setTimeout(() => notif.remove(), 400);
@@ -100,87 +99,4 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 5, title: "LABUBU | FWM GLASSES", price: 379, image: "images/Mini_labubu_FWM.jpg" },
     { id: 6, title: "LABUBU | ANGEL IN CLOUD", price: 649, image: "images/Labubu_ANGEL_IN_CLOUD.jpg" },
     { id: 7, title: "LABUBU | ROCK", price: 549, image: "images/Labubu_ROCK.jpg" },
-    { id: 8, title: "MINI LABUBU | WOF", price: 59, image: "images/Mini_Labubub_WINGS_OF_FORTUNE.jpg" },
-    { id: 9, title: "MINI LABUBU | FIW", price: 59, image: "images/Mini_Labubu_FALL_INTO-WILD.jpg" },
-    { id: 10, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
-  ];
-
-  const productsContainer = document.getElementById('products');
-  productsContainer.innerHTML = '';
-  products.forEach(product => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <article>
-        <img src="${product.image}" alt="${product.title}">
-        <h3>${product.title}</h3>
-        <p class="price">${product.price} €</p>
-        <button class="add-btn" data-id="${product.id}" data-title="${product.title}" data-price="${product.price}">
-          Добавить в корзину
-        </button>
-      </article>
-    `;
-    productsContainer.appendChild(li);
-  });
-
-  productsContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("add-btn")) {
-      const id = parseInt(e.target.dataset.id);
-      const title = e.target.dataset.title;
-      const price = parseInt(e.target.dataset.price);
-      addToCart(cart, { id, title, price });
-      saveCart();
-      updateCartCount();
-      updateAddButtons();
-    }
-  });
-
-  const cartModal = document.getElementById("cartModal");
-  const cartItems = document.getElementById("cartItems");
-
-  document.getElementById("cartBtn")?.addEventListener("click", () => { showCart(); cartModal?.classList.remove("hidden"); });
-  document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
-
-  cartItems?.addEventListener("click", e => {
-    if (e.target.classList.contains("remove-btn")) {
-      removeFromCart(cart, e.target.dataset.id);
-      saveCart();
-      showCart();
-      updateCartCount();
-    }
-  });
-
-  cartItems?.addEventListener("change", e => {
-    if (e.target.classList.contains("qty-input")) {
-      const id = e.target.dataset.id;
-      let value = parseInt(e.target.value);
-      updateQty(cart, id, value);
-      e.target.value = cart[id].qty;
-      saveCart();
-      showCart();
-      updateCartCount();
-    }
-  });
-
-  const checkoutModal = document.getElementById("checkoutModal");
-  document.getElementById("checkoutBtn")?.addEventListener("click", () => checkoutModal?.classList.remove("hidden"));
-  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
-
-  document.getElementById("orderForm")?.addEventListener("submit", e => {
-    e.preventDefault();
-    if (Object.values(cart).reduce((sum, item) => sum + item.qty, 0) === 0) {
-      showNotification("⚠ Корзина пуста!");
-      return;
-    }
-
-    cart = {};
-    saveCart();
-    updateCartCount();
-    checkoutModal?.classList.add("hidden");
-    cartModal?.classList.add("hidden");
-    updateAddButtons();
-    showNotification("✅ Заказ успешно создан!");
-  });
-
-  updateCartCount();
-  updateAddButtons();
-});
+    { id: 8, title: "MINI LABUBU | WOF", price:
