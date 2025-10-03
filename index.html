@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
   <meta charset="utf-8" />
   <title>LABUBU WORLD</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
   <header>
     <h1>LABUBU WORLD</h1>
-    <button id="cartBtn"> Корзина (<span id="cartCount">0</span>)</button>
+    <button id="cartBtn">
+      <i class="fas fa-shopping-cart"></i>
+      <span id="cartCount">0</span>
+    </button>
   </header>
 
   <main>
     <h2>Каталог</h2>
     <ul id="products" class="products">
-      <!-- товары будут вставлены JS -->
     </ul>
   </main>
 
-  <!-- Модальное окно корзины -->
+
   <div id="cartModal" class="modal hidden">
     <div class="modal-content">
       <span id="closeCart" class="close">&times;</span>
@@ -32,23 +35,22 @@
     </div>
   </div>
   
-  <!-- Заказ -->
+
   <div id="checkoutModal" class="modal hidden">
     <div class="modal-content">
       <span id="closeCheckout" class="close">&times;</span>
       <h2>Оформление заказа</h2>
       <form id="orderForm" class="order-form">
-        <label>Имя: <input type="text" name="firstName" ></label>
-        <label>Фамилия: <input type="text" name="lastName" ></label>
-        <label>Адрес: <input type="text" name="address" ></label>
-        <label>Телефон: <input type="tel" name="phone" ></label>
+        <label>Имя: <input type="text" name="firstName"></label>
+        <label>Фамилия: <input type="text" name="lastName"></label>
+        <label>Адрес: <input type="text" name="address"></label>
+        <label>Телефон: <input type="tel" name="phone"></label>
         <button type="submit" class="btn-primary">Создать заказ</button>
       </form>
     </div>
   </div>
 
-
-  <!-- подключаем script с defer чтобы скрипт ждал загрузки DOM -->
+  
   <script src="script.js" defer></script>
 </body>
 </html>
