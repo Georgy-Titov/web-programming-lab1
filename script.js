@@ -5,7 +5,7 @@ if (savedCart) cart = JSON.parse(savedCart);
 
 function addToCart(cartObj, product) {
   const id = product.id;
-  if (cartObj[id]) return; // если товар уже в корзине, не увеличиваем
+  if (cartObj[id]) return;
   cartObj[id] = { title: product.title, price: product.price, qty: 1 };
 }
 
@@ -46,7 +46,7 @@ function showCart() {
       <div class="cart-item-info">
         <span>${item.title}</span>
         <span>${item.price} €</span>
-        <div>
+        <div class="qty-controls">
           <button class="qty-btn" data-id="${id}" data-action="decrease">-</button>
           <input type="number" min="1" max="10000" value="${item.qty}" data-id="${id}" class="qty-input">
           <button class="qty-btn" data-id="${id}" data-action="increase">+</button>
@@ -71,11 +71,7 @@ function showNotification(message) {
   document.body.appendChild(notif);
 
   setTimeout(() => notif.classList.add("show"), 50);
-
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 400);
-  }, 3000);
+  setTimeout(() => { notif.classList.remove("show"); setTimeout(() => notif.remove(), 400); }, 3000);
 }
 
 function updateAddButtons() {
@@ -127,74 +123,4 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartItems = document.getElementById("cartItems");
 
   productsContainer.addEventListener("click", e => {
-    if (e.target.classList.contains("add-btn")) {
-      const id = parseInt(e.target.dataset.id);
-      if (cart[id]) {
-        saveCart();
-        showCart();
-        cartModal?.classList.remove("hidden");
-      } else {
-        const title = e.target.dataset.title;
-        const price = parseInt(e.target.dataset.price);
-        addToCart(cart, { id, title, price });
-        saveCart();
-        updateCartCount();
-        updateAddButtons();
-        showNotification("✅ Товар добавлен в корзину!");
-      }
-    }
-  });
-
-  document.getElementById("cartBtn")?.addEventListener("click", () => { showCart(); cartModal?.classList.remove("hidden"); });
-  document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
-  document.getElementById("checkoutBtn")?.addEventListener("click", () => { checkoutModal?.classList.remove("hidden"); cartModal?.classList.add("hidden"); });
-  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
-
-  cartItems?.addEventListener("click", e => {
-    const id = e.target.dataset.id;
-    if (e.target.classList.contains("remove-btn")) {
-      removeFromCart(cart, id);
-      saveCart();
-      showCart();
-      updateCartCount();
-    } else if (e.target.classList.contains("qty-btn")) {
-      if (e.target.dataset.action === "increase") {
-        updateQty(cart, id, cart[id].qty + 1);
-      } else if (e.target.dataset.action === "decrease") {
-        updateQty(cart, id, cart[id].qty - 1);
-      }
-      saveCart();
-      showCart();
-      updateCartCount();
-    }
-  });
-
-  cartItems?.addEventListener("change", e => {
-    if (e.target.classList.contains("qty-input")) {
-      const id = e.target.dataset.id;
-      let value = parseInt(e.target.value);
-      updateQty(cart, id, value);
-      saveCart();
-      showCart();
-      updateCartCount();
-    }
-  });
-
-  document.getElementById("orderForm")?.addEventListener("submit", e => {
-    e.preventDefault();
-    if (Object.values(cart).reduce((sum, item) => sum + item.qty, 0) === 0) {
-      showNotification("⚠ Корзина пуста!");
-      return;
-    }
-
-    cart = {};
-    saveCart();
-    updateCartCount();
-    checkoutModal?.classList.add("hidden");
-    updateAddButtons();
-    showNotification("✅ Заказ успешно создан!");
-  });
-
-  updateCartCount();
-  updateAddButtons();
-});
+    if (e.target.classList.contains("
