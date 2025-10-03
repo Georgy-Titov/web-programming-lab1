@@ -5,9 +5,8 @@ if (savedCart) cart = JSON.parse(savedCart);
 
 function addToCart(cartObj, product) {
   const id = product.id;
-  if (!cartObj[id]) {
-    cartObj[id] = { title: product.title, price: product.price, qty: 1 };
-  }
+  if (cartObj[id]) return; // если товар уже в корзине, не увеличиваем
+  cartObj[id] = { title: product.title, price: product.price, qty: 1 };
 }
 
 function updateQty(cartObj, id, qty) {
@@ -31,20 +30,6 @@ function updateCartCount() {
   if (cartCountElem) cartCountElem.textContent = count;
 }
 
-function showNotification(message) {
-  let notif = document.createElement("div");
-  notif.className = "notification";
-  notif.textContent = message;
-  document.body.appendChild(notif);
-
-  setTimeout(() => notif.classList.add("show"), 50);
-
-  setTimeout(() => {
-    notif.classList.remove("show");
-    setTimeout(() => notif.remove(), 400);
-  }, 3000);
-}
-
 function showCart() {
   const cartItems = document.getElementById("cartItems");
   if (!cartItems) return;
@@ -61,10 +46,10 @@ function showCart() {
       <div class="cart-item-info">
         <span>${item.title}</span>
         <span>${item.price} €</span>
-        <div class="qty-controls" data-id="${id}">
-          <button class="decrease">-</button>
-          <span class="qty">${item.qty}</span>
-          <button class="increase">+</button>
+        <div>
+          <button class="qty-btn" data-id="${id}" data-action="decrease">-</button>
+          <input type="number" min="1" max="10000" value="${item.qty}" data-id="${id}" class="qty-input">
+          <button class="qty-btn" data-id="${id}" data-action="increase">+</button>
         </div>
       </div>
       <div class="cart-item-sum">Итого: ${item.price * item.qty} €</div>
@@ -79,12 +64,26 @@ function showCart() {
   updateAddButtons();
 }
 
+function showNotification(message) {
+  let notif = document.createElement("div");
+  notif.className = "notification";
+  notif.textContent = message;
+  document.body.appendChild(notif);
+
+  setTimeout(() => notif.classList.add("show"), 50);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => notif.remove(), 400);
+  }, 3000);
+}
+
 function updateAddButtons() {
   document.querySelectorAll(".add-btn").forEach(btn => {
     const id = parseInt(btn.dataset.id);
     if (cart[id]) {
       btn.classList.add("in-cart");
-      btn.textContent = "В корзине";
+      btn.textContent = "Уже в корзине";
     } else {
       btn.classList.remove("in-cart");
       btn.textContent = "Добавить в корзину";
@@ -92,7 +91,7 @@ function updateAddButtons() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const products = [
     { id: 1, title: "LABUBU | WINGS OF FANTASY", price: 399, image: "images/Labubu_WINGS_OF_FANTASY.jpg" },
     { id: 2, title: "LABUBU | FALL INTO WILD", price: 359, image: "images/Labubu_FALL_INTO-WILD.jpg" },
@@ -106,10 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 10, title: "MINI LABUBU | COLA", price: 79, image: "images/Labubu_COLA.jpg" }
   ];
 
-  const productsContainer = document.getElementById("products");
-  productsContainer.innerHTML = "";
+  const productsContainer = document.getElementById('products');
+  productsContainer.innerHTML = '';
   products.forEach(product => {
-    const li = document.createElement("li");
+    const li = document.createElement('li');
     li.innerHTML = `
       <article>
         <img src="${product.image}" alt="${product.title}">
@@ -123,11 +122,17 @@ document.addEventListener("DOMContentLoaded", () => {
     productsContainer.appendChild(li);
   });
 
+  const cartModal = document.getElementById("cartModal");
+  const checkoutModal = document.getElementById("checkoutModal");
+  const cartItems = document.getElementById("cartItems");
+
   productsContainer.addEventListener("click", e => {
     if (e.target.classList.contains("add-btn")) {
       const id = parseInt(e.target.dataset.id);
       if (cart[id]) {
-        document.getElementById("cartModal")?.classList.remove("hidden");
+        saveCart();
+        showCart();
+        cartModal?.classList.remove("hidden");
       } else {
         const title = e.target.dataset.title;
         const price = parseInt(e.target.dataset.price);
@@ -140,37 +145,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const cartModal = document.getElementById("cartModal");
-  const cartItems = document.getElementById("cartItems");
-
-  document.getElementById("cartBtn")?.addEventListener("click", () => {
-    showCart();
-    cartModal?.classList.remove("hidden");
-  });
+  document.getElementById("cartBtn")?.addEventListener("click", () => { showCart(); cartModal?.classList.remove("hidden"); });
   document.getElementById("closeCart")?.addEventListener("click", () => cartModal?.classList.add("hidden"));
+  document.getElementById("checkoutBtn")?.addEventListener("click", () => { checkoutModal?.classList.remove("hidden"); cartModal?.classList.add("hidden"); });
+  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
 
   cartItems?.addEventListener("click", e => {
-    const id = e.target.closest(".qty-controls")?.dataset.id || e.target.dataset.id;
-    if (!id) return;
-
-    if (e.target.classList.contains("increase")) {
-      updateQty(cart, id, cart[id].qty + 1);
-    }
-    if (e.target.classList.contains("decrease")) {
-      updateQty(cart, id, cart[id].qty - 1);
-    }
+    const id = e.target.dataset.id;
     if (e.target.classList.contains("remove-btn")) {
       removeFromCart(cart, id);
+      saveCart();
+      showCart();
+      updateCartCount();
+    } else if (e.target.classList.contains("qty-btn")) {
+      if (e.target.dataset.action === "increase") {
+        updateQty(cart, id, cart[id].qty + 1);
+      } else if (e.target.dataset.action === "decrease") {
+        updateQty(cart, id, cart[id].qty - 1);
+      }
+      saveCart();
+      showCart();
+      updateCartCount();
     }
-
-    saveCart();
-    showCart();
-    updateCartCount();
   });
 
-  const checkoutModal = document.getElementById("checkoutModal");
-  document.getElementById("checkoutBtn")?.addEventListener("click", () => checkoutModal?.classList.remove("hidden"));
-  document.getElementById("closeCheckout")?.addEventListener("click", () => checkoutModal?.classList.add("hidden"));
+  cartItems?.addEventListener("change", e => {
+    if (e.target.classList.contains("qty-input")) {
+      const id = e.target.dataset.id;
+      let value = parseInt(e.target.value);
+      updateQty(cart, id, value);
+      saveCart();
+      showCart();
+      updateCartCount();
+    }
+  });
 
   document.getElementById("orderForm")?.addEventListener("submit", e => {
     e.preventDefault();
@@ -183,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     saveCart();
     updateCartCount();
     checkoutModal?.classList.add("hidden");
-    cartModal?.classList.add("hidden");
     updateAddButtons();
     showNotification("✅ Заказ успешно создан!");
   });
